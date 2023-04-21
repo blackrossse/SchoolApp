@@ -6,6 +6,6 @@ import com.example.school.screens.chat.models.MessageModel
 import kotlinx.coroutines.flow.Flow
 
 interface FirebaseRealtimeDatabaseService {
-    fun getMessages(): Flow<MessageModel?>
+    fun getMessages(): Flow<MutableList<MessageModel>>
     fun sendMessage(message: MessageModel)
 }

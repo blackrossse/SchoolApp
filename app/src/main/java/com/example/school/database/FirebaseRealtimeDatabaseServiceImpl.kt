@@ -10,9 +10,11 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
 class FirebaseRealtimeDatabaseServiceImpl : FirebaseRealtimeDatabaseService {
@@ -20,32 +22,27 @@ class FirebaseRealtimeDatabaseServiceImpl : FirebaseRealtimeDatabaseService {
     private val database = Firebase.database
     private val messagesRef = database.getReference("messages")
 
-    var messages: MutableList<MessageModel> = mutableListOf()
-
-    override fun getMessages(): Flow<MessageModel?> {
+    override fun getMessages(): Flow<MutableList<MessageModel>> {
         return callbackFlow {
+            val messages: MutableList<MessageModel> = mutableListOf()
+
             val messagesListener = object : ChildEventListener {
+
                 override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                     val message = snapshot.getValue<MessageModel>()
-
-                    trySend(message)
-                 }
-
-                override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                    TODO("Not yet implemented")
+                    message?.let {
+                        messages.add(0, it)
+                    }
+                    trySend(messages)
                 }
 
-                override fun onChildRemoved(snapshot: DataSnapshot) {
-                    TODO("Not yet implemented")
-                }
+                override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
 
-                override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-                    TODO("Not yet implemented")
-                }
+                override fun onChildRemoved(snapshot: DataSnapshot) {}
 
-                override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
-                }
+                override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
+
+                override fun onCancelled(error: DatabaseError) {}
             }
 
             messagesRef.addChildEventListener(messagesListener)

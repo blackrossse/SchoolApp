@@ -66,25 +66,15 @@ class ChatViewModel(
 
         viewModelScope.launch {
 
-    /*        repository.getMessages()
-                .collect() { data ->
-                    _uiState.value.messages = data.toList()
-                }*/
-
-
-/*            val itemsMessage = repository.get()
-
-            Log.d("sizeOflistMess", itemsMessage.size.toString())
-
-            if (itemsMessage.size != 0) {
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        isLoading = false,
-                        messages = itemsMessage
-                    )
+            repository.getMessages()
+                .map { messages ->
+                    ChatViewState(messages = messages, isLoading = false)
                 }
-            }*/
-        }
-    }
+                .collect() { newState ->
+                    _uiState.value = newState
+                }
 
+        }
+
+    }
 }

@@ -2,9 +2,7 @@ package com.example.school.screens.chat.models
 
 data class ChatViewState(
     val isLoading: Boolean = true,
-    // val messages: MutableList<MessageModel> = mutableListOf()
-    var messages: List<MessageModel> = emptyList()
-
+    var messages: MutableList<MessageModel> = mutableListOf()
 )
 
 data class MessageModel(
