@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".javacode.SignInActivity">
+
+    <TextView
+        android:id="@+id/loginTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:onClick="toggleLogin"
+        android:text="вход"
+        android:textSize="23sp"
+        android:textColor="@color/black"
+        android:drawableStart="@drawable/ic_baseline_login_24"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_margin="10dp"
+        />
+
+
+    <EditText
+        android:id="@+id/nameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:paddingStart="15dp"
+        android:background="@drawable/custom_input"
+        android:hint="Имя"
+        android:inputType="textPersonName"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias=".4"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        />
+
+    <View
+        android:id="@+id/errorView1"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/baseline_error_24"
+        app:layout_constraintTop_toTopOf="@id/nameEditText"
+        app:layout_constraintBottom_toBottomOf="@id/nameEditText"
+        app:layout_constraintLeft_toLeftOf="@id/nameEditText"
+        app:layout_constraintRight_toRightOf="@id/nameEditText"
+        app:layout_constraintHorizontal_bias=".9"
+        android:layout_marginStart="200dp"
+        android:visibility="invisible"
+        />
+
+    <EditText
+        android:id="@+id/mailEditText"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:paddingStart="15dp"
+        android:background="@drawable/custom_input"
+        android:hint="Почта"
+        android:inputType="textEmailAddress"
+        app:layout_constraintTop_toBottomOf="@+id/nameEditText"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="15dp"
+        />
+
+    <View
+        android:id="@+id/errorView2"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/baseline_error_24"
+        app:layout_constraintTop_toTopOf="@id/mailEditText"
+        app:layout_constraintBottom_toBottomOf="@id/mailEditText"
+        app:layout_constraintLeft_toLeftOf="@id/mailEditText"
+        app:layout_constraintRight_toRightOf="@id/mailEditText"
+        app:layout_constraintHorizontal_bias=".9"
+        android:layout_marginStart="200dp"
+        android:visibility="invisible"
+        />
+
+    <EditText
+        android:id="@+id/passwordEditText"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:paddingStart="15dp"
+        android:background="@drawable/custom_input"
+        android:hint="Пароль"
+        android:inputType="textPassword"
+        app:layout_constraintTop_toBottomOf="@+id/mailEditText"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="15dp"
+        />
+
+    <View
+        android:id="@+id/errorView3"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/baseline_error_24"
+        app:layout_constraintTop_toTopOf="@id/passwordEditText"
+        app:layout_constraintBottom_toBottomOf="@id/passwordEditText"
+        app:layout_constraintLeft_toLeftOf="@id/passwordEditText"
+        app:layout_constraintRight_toRightOf="@id/passwordEditText"
+        app:layout_constraintHorizontal_bias=".9"
+        android:layout_marginStart="200dp"
+        android:visibility="invisible"
+        />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/registrButton"
+        android:layout_width="165dp"
+        android:layout_height="60dp"
+        android:textSize="14sp"
+        android:text="Регистрация"
+        app:cornerRadius="20sp"
+        app:layout_constraintTop_toBottomOf="@+id/passwordEditText"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="25dp"
+        />
+
+    <TextView
+        android:id="@+id/newAdminTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Стать админом"
+        android:textSize="16sp"
+        android:visibility="gone"
+        android:onClick="addNewAdmin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="30dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        />
+
+    <View
+        android:id="@+id/backgroundProgressBarView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:translationZ="90dp"
+        android:background="@color/grey"
+        android:alpha="0.7"
+        android:visibility="gone"
+        />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:indeterminate="true"
+        android:indeterminateTintMode="src_atop"
+        android:indeterminateTint="@color/white"
+        android:padding="15dp"
+        android:background="@drawable/background_progress_bar"
+        android:translationZ="90dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:visibility="gone"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

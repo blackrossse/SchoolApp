@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:backgroundTint="@color/black"
+    app:cardCornerRadius="8dp"
+    android:layout_margin="8dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/userNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nick128"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            />
+
+        <TextView
+            android:id="@+id/timeAndDateTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="01.18 в 14:16"
+            android:textColor="@color/white"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/textTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:textSize="17sp"
+            android:text="Учительница по русскому языку сломала руку, теперь будут замещения на литре и русском "
+            android:textColor="@color/white"
+            />
+    </LinearLayout>
+
+
+</androidx.cardview.widget.CardView>
