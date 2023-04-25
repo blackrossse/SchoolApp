@@ -2,11 +2,9 @@ package com.example.school.screens.chat
 
 import android.annotation.SuppressLint
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.school.base.EventHandler
-import com.example.school.database.FirebaseRealtimeDatabaseService
 import com.example.school.database.FirebaseRealtimeDatabaseServiceImpl
 import com.example.school.database.Repository
 import com.example.school.screens.chat.models.ChatEvent
@@ -17,6 +15,7 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -42,19 +41,23 @@ class ChatViewModel(
         val message = MessageModel(
             Firebase.auth.currentUser?.displayName.toString(),
             text,
-            df.format(calendar.time)
+            df.format(calendar.time),
+            isMine = true
         )
 
-/*        viewModelScope.launch {
+        viewModelScope.launch {
             repository.addMessage(message)
 
-            _uiState.update { currentState ->
-                currentState.copy(
-                    isLoading = false,
-                    messages =
-                )
-            }
-        }*/
+            val listOfMessages = mutableListOf<MessageModel>()
+            repository.getMessages()
+                .map() {
+                    for (i in it) {
+                        listOfMessages.add(i)
+                    }
+                }
+
+            _uiState.value.messages = listOfMessages
+        }
     }
 
     private fun getMessages() {

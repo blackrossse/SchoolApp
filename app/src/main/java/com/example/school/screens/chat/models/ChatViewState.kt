@@ -8,5 +8,6 @@ data class ChatViewState(
 data class MessageModel(
     val name: String = "",
     val text: String = "",
-    val time: String = ""
+    val time: String = "",
+    var isMine: Boolean = false
 )

@@ -1,5 +1,6 @@
 package com.example.school.screens
 
+import android.util.Log
 import androidx.compose.foundation.interaction.DragInteraction
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -29,10 +30,10 @@ import com.example.school.screens.chat.models.MessageModel
 @Composable
 fun ChatScreen(
     modifier: Modifier = Modifier,
-    isLoading: Boolean,
-    messages: List<MessageModel>,
+    chatViewModel: ChatViewModel,
     onClickSendMessage: (String) -> Unit
 ) {
+    val viewState by chatViewModel.uiState.collectAsState()
 
     var text by remember {
         mutableStateOf("")
@@ -47,7 +48,7 @@ fun ChatScreen(
     ) {
         val (list, textfield) = createRefs()
 
-        if (isLoading) {
+        if (viewState.isLoading) {
             Box(
                 modifier = Modifier
                     .constrainAs(list) {
@@ -79,8 +80,9 @@ fun ChatScreen(
                     },
                 reverseLayout = true
             ) {
-                messages.forEach { item ->
+                viewState.messages.forEach { item ->
                     item {
+                        Log.d("myItem", item.toString())
                         MessageItem(item)
                     }
                 }
@@ -122,8 +124,8 @@ fun ChatScreen(
                     .align(Alignment.BottomEnd)
                 ,
                 onClick = {
-                    if (!text.isEmpty()) {
-                        onClickSendMessage(text)
+                    if (!text.trim().isEmpty()) {
+                        onClickSendMessage(text.trim())
                         text = ""
                     }
                           },

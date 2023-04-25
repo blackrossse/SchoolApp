@@ -1,6 +1,7 @@
 package com.example.school.screens
 
 import android.graphics.Paint.Align
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -21,10 +22,12 @@ import com.example.school.screens.chat.models.MessageModel
 
 @Composable
 fun MessageItem(messageItem: MessageModel) {
+    Log.d("isMine", messageItem.isMine.toString())
     Row(
         modifier = Modifier
             .fillMaxWidth(),
-        horizontalArrangement = Arrangement.Start
+        horizontalArrangement =
+            if (messageItem.isMine) Arrangement.End else Arrangement.Start
     ) {
         Card(
             modifier = Modifier

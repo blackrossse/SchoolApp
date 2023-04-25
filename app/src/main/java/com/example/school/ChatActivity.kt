@@ -39,7 +39,6 @@ class ChatActivity : ComponentActivity() {
 
         setContent {
             val chatViewModel: ChatViewModel = viewModel()
-            val chatUiState by chatViewModel.uiState.collectAsState(ChatViewState())
 
             SchoolTheme() {
                 Surface(
@@ -50,8 +49,7 @@ class ChatActivity : ComponentActivity() {
 
                     // Composable
                     ChatScreen(
-                        messages = chatUiState.messages,
-                        isLoading = chatUiState.isLoading
+                        chatViewModel = chatViewModel
                     ) {
                         chatViewModel.obtainEvent(ChatEvent.SendMessage(it))
                     }
