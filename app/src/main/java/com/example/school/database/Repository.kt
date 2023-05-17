@@ -10,6 +10,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -18,7 +19,7 @@ class Repository(
     private val firebaseRealtimeDatabaseService: FirebaseRealtimeDatabaseServiceImpl
 ) {
 
-    fun getMessages(): Flow<MutableList<MessageModel>> {
+    suspend fun getMessages(): Flow<MutableList<MessageModel>> {
         return firebaseRealtimeDatabaseService.getMessages()
     }
 

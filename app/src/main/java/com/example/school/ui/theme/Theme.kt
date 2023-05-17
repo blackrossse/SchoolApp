@@ -8,10 +8,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 private val DarkColorPalette = darkColors(
-    primary = Color.Black,
+    primary = Color(0xFF331783),
     primaryVariant = Color.Black,
     secondary = Color.Black,
-    background = Color.White
+    background = Color(0xFF131313),
+    onBackground = Color(0xFF131313)
 )
 
 private val LightColorPalette = lightColors(

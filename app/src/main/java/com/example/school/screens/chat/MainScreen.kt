@@ -1,6 +1,8 @@
 package com.example.school.screens
 
+import android.annotation.SuppressLint
 import android.util.Log
+import android.view.WindowInsets
 import androidx.compose.foundation.interaction.DragInteraction
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -23,9 +25,12 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.core.view.ViewCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.school.screens.chat.ChatViewModel
 import com.example.school.screens.chat.models.MessageModel
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 
 @Composable
 fun ChatScreen(
@@ -37,9 +42,6 @@ fun ChatScreen(
 
     var text by remember {
         mutableStateOf("")
-    }
-    var isTextFieldFocused by remember {
-        mutableStateOf(false)
     }
 
     // Chat area
@@ -62,7 +64,7 @@ fun ChatScreen(
                 contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator(
-                    color = Color.Black,
+                    color = Color.White,
                     strokeWidth = 5.dp,
                     modifier = Modifier.size(70.dp)
                 )
@@ -80,9 +82,8 @@ fun ChatScreen(
                     },
                 reverseLayout = true
             ) {
-                viewState.messages.forEach { item ->
+                viewState.messages.forEachIndexed { _, item ->
                     item {
-                        Log.d("myItem", item.toString())
                         MessageItem(item)
                     }
                 }
@@ -97,7 +98,6 @@ fun ChatScreen(
                     start.linkTo(parent.start, margin = 5.dp)
                     end.linkTo(parent.end, margin = 7.dp)
                     width = Dimension.fillToConstraints
-                    // height = Dimension.value(70.dp)
                 },
             contentAlignment = Alignment.CenterStart
         ) {
@@ -109,7 +109,7 @@ fun ChatScreen(
                 label = { Text("Сообщение") },
                 shape = RoundedCornerShape(15.dp),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
-                    textColor = Color.Black,
+                    textColor = Color.White,
                     unfocusedBorderColor = Color.Gray,
                     unfocusedLabelColor = Color.Gray
                 ),

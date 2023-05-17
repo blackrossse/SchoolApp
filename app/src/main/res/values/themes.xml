@@ -9,6 +9,10 @@
         <item name="android:alertDialogTheme">@style/AlertDialogCustom</item>
     </style>
 
+    <style name="ChatBackground" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="backgroundColor">#B31E1E</item>
+    </style>
+
     <style name="AlertDialogCustom" parent="Theme.AppCompat.Dialog.Alert">
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:colorAccent">@color/white</item>

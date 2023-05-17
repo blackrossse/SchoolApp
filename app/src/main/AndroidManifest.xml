@@ -14,15 +14,11 @@
         android:theme="@style/Theme.School"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity2"
-            android:exported="false"
-            android:label="@string/title_activity_main2"
-            android:theme="@style/Theme.School" />
-        <activity
             android:name=".ChatActivity"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
+            android:windowSoftInputMode="adjustResize"
             android:exported="false"
-            android:label="@string/title_activity_chat"
-            android:theme="@style/Theme.School" />
+            android:label="@string/title_activity_chat" />
         <activity
             android:name=".javacode.NewAdminActivity"
             android:exported="false"

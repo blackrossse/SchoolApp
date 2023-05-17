@@ -5,11 +5,22 @@ import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.TileMode
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.LocalWindowInfo
+import androidx.compose.ui.unit.dp
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.school.screens.ChatScreen
 import com.example.school.screens.chat.ChatViewModel
@@ -29,25 +40,28 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class ChatActivity : ComponentActivity() {
+    @OptIn(ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class)
     @SuppressLint("SimpleDateFormat")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Not to hide bottom margin when opening keyboard
-        val window = this.window
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+        /*
+        * 1. Разобраться с клавиатурой #
+        * 2. Изменить цвет при isMine формы сообщения #
+        * 3. Сделать чтобы сообщения когда отправляются
+        *       от одного человека шли вместе и уже без ника пользователя #
+        * 4. Сделать чтобы показывало день в который отправлена была группа сообщений
+        *
+        * */
 
         setContent {
             val chatViewModel: ChatViewModel = viewModel()
 
             SchoolTheme() {
-                Surface(
+                Surface (
                     modifier = Modifier
                         .fillMaxSize(),
-                    color = MaterialTheme.colors.background
                 ) {
-
-                    // Composable
                     ChatScreen(
                         chatViewModel = chatViewModel
                     ) {

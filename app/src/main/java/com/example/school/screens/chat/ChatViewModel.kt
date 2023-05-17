@@ -12,10 +12,8 @@ import com.example.school.screens.chat.models.ChatViewState
 import com.example.school.screens.chat.models.MessageModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -25,6 +23,8 @@ class ChatViewModel(
 
     private val _uiState = MutableStateFlow(ChatViewState())
     val uiState: StateFlow<ChatViewState> = _uiState.asStateFlow()
+
+    private var _messagesItemsSenders = mutableListOf<String>()
 
     override fun obtainEvent(event: ChatEvent) {
         when (event) {
@@ -42,13 +42,15 @@ class ChatViewModel(
             Firebase.auth.currentUser?.displayName.toString(),
             text,
             df.format(calendar.time),
-            isMine = true
+            isMine = false,
+            sender = Firebase.auth.currentUser?.uid.toString()
         )
 
         viewModelScope.launch {
             repository.addMessage(message)
 
             val listOfMessages = mutableListOf<MessageModel>()
+
             repository.getMessages()
                 .map() {
                     for (i in it) {
@@ -56,7 +58,9 @@ class ChatViewModel(
                     }
                 }
 
-            _uiState.value.messages = listOfMessages
+            withContext(Dispatchers.Main) {
+                _uiState.value.messages = listOfMessages
+            }
         }
     }
 
@@ -68,9 +72,19 @@ class ChatViewModel(
         }
 
         viewModelScope.launch {
-
+            var i = 0
             repository.getMessages()
                 .map { messages ->
+
+                    _messagesItemsSenders.add(messages.get(0).sender)
+
+                    if ((_messagesItemsSenders.size > 1) && (!messages.get(0).isMine) and
+                            (_messagesItemsSenders[i] == _messagesItemsSenders[i-1])) {
+                        messages.get(0).isMoreOne = true
+                    } else {
+                        // _messagesItemsSenders = mutableListOf()
+                    }
+                    i += 1
                     ChatViewState(messages = messages, isLoading = false)
                 }
                 .collect() { newState ->

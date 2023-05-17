@@ -9,5 +9,7 @@ data class MessageModel(
     val name: String = "",
     val text: String = "",
     val time: String = "",
-    var isMine: Boolean = false
+    val sender: String = "",
+    var isMine: Boolean = false,
+    var isMoreOne: Boolean = false
 )
