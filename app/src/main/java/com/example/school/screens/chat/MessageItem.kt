@@ -20,15 +20,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.school.screens.chat.models.MessageModel
 
 @Composable
 fun MessageItem(
-    messageItem: MessageModel,
+    messageItem: Map<String, Any>,
 ) {
     Column {
         // Show the date of group messages
-        if (messageItem.isNewDate) {
+        if (messageItem["isNewDate"] as Boolean) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -40,7 +39,7 @@ fun MessageItem(
                     backgroundColor = Color(0xFF3C3F41),
                 ) {
                     Text(
-                        text = messageItem.date,
+                        text = messageItem["date"].toString(),
                         modifier = Modifier
                             .padding(top = 3.dp, bottom = 3.dp, start = 6.dp, end = 6.dp),
 
@@ -57,11 +56,11 @@ fun MessageItem(
             modifier = Modifier
                 .fillMaxWidth(),
             horizontalArrangement =
-            if (messageItem.isMine) Arrangement.End else Arrangement.Start
+            if (messageItem["isMine"] as Boolean) Arrangement.End else Arrangement.Start
         ) {
 
             // Time card of message (if mine)
-            if (messageItem.isMine) {
+            if (messageItem["isMine"] as Boolean) {
                 Card(
                     modifier = Modifier
                         .padding(bottom = 15.dp)
@@ -74,7 +73,7 @@ fun MessageItem(
                         modifier = Modifier
                             .alpha(.9f)
                             .padding(top = 2.dp, bottom = 2.dp, start = 5.dp, end = 5.dp),
-                        text = messageItem.time,
+                        text = messageItem["time"].toString(),
                         fontSize = 10.sp
                     )
                 }
@@ -85,18 +84,18 @@ fun MessageItem(
                 modifier = Modifier
                     .widthIn(max = 350.dp)
                     .padding(
-                        start = if (messageItem.isMine) 5.dp else 10.dp,
-                        end = if (messageItem.isMine) 10.dp else 5.dp,
+                        start = if (messageItem["isMine"] as Boolean) 5.dp else 10.dp,
+                        end = if (messageItem["isMine"] as Boolean) 10.dp else 5.dp,
                         bottom = 4.dp,
                         top =
-                        if (messageItem.isMine xor messageItem.isPaddingMine) 1.dp
-                        else if (messageItem.isPaddingMine) 15.dp
-                        else if (messageItem.isMoreOne) .5.dp
+                        if (messageItem["isMine"] as Boolean xor messageItem["isPaddingMine"] as Boolean) 1.dp
+                        else if (messageItem["isPaddingMine"] as Boolean) 15.dp
+                        else if (messageItem["isMoreOne"] as Boolean) .5.dp
                         else 15.dp
                     ),
                 shape = RoundedCornerShape(15.dp),
                 backgroundColor =
-                if (messageItem.isMine) Color(0xFF4A109C) else Color(0xFF292829),
+                if (messageItem["isMine"] as Boolean) Color(0xFF4A109C) else Color(0xFF292829),
                 contentColor = Color.White
             ) {
                 Column(
@@ -109,10 +108,10 @@ fun MessageItem(
                         )
                 ) {
 
-                    if (!messageItem.isMine xor messageItem.isMoreOne) {
+                    if (!(messageItem["isMine"] as Boolean) xor messageItem["isMoreOne"] as Boolean) {
                         Text(
                             modifier = Modifier,
-                            text = messageItem.name,
+                            text = messageItem["name"].toString(),
                             fontWeight = FontWeight.Bold,
                             fontSize = 15.sp,
                             color = Color.White
@@ -120,7 +119,7 @@ fun MessageItem(
                     }
 
                     Text(
-                        text = messageItem.text,
+                        text = messageItem["text"].toString(),
                         fontSize = 16.sp
                     )
 
@@ -129,7 +128,7 @@ fun MessageItem(
             }
 
             // Time card of message (if not mine)
-            if (!messageItem.isMine) {
+            if (!(messageItem["isMine"] as Boolean)) {
                 Card(
                     modifier = Modifier
                         .padding(bottom = 15.dp)
@@ -142,7 +141,7 @@ fun MessageItem(
                         modifier = Modifier
                             .alpha(.9f)
                             .padding(top = 2.dp, bottom = 2.dp, start = 5.dp, end = 5.dp),
-                        text = messageItem.time,
+                        text = messageItem["time"].toString(),
                         fontSize = 9.sp
                     )
                 }
@@ -156,11 +155,5 @@ fun MessageItem(
 @Preview (showBackground = true)
 @Composable
 fun MessageItemPreview() {
-    MessageItem(
-        messageItem = MessageModel(
-        "Nick",
-        "если честно, не знаю, кому как короч, мне понрав, а тебе? как",
-        "12:43",
-    ),
-    )
+
 }

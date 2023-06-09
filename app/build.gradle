@@ -53,6 +53,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
+    // For mail
     implementation files('libs\\activation.jar')
     implementation files('libs\\additionnal.jar')
     implementation files('libs\\javax.mail.jar')
@@ -65,13 +66,18 @@ dependencies {
 
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
 
+    // Firebase
     implementation 'com.google.firebase:firebase-auth:21.1.0'
     implementation platform('com.google.firebase:firebase-bom:31.1.1')
     implementation 'com.google.firebase:firebase-database'
 
+    // Firebase-ktx
     implementation 'com.google.firebase:firebase-database-ktx'
     implementation 'com.google.firebase:firebase-auth-ktx'
+    implementation 'com.google.firebase:firebase-firestore-ktx'
+    implementation 'com.google.firebase:firebase-analytics-ktx'
 
+    // ViewModel-compose
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1"
 
     testImplementation 'junit:junit:4.13.2'

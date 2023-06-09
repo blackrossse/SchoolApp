@@ -13,8 +13,14 @@ import com.example.school.database.FirebaseRealtimeDatabaseServiceImpl
 import com.example.school.database.Repository
 import com.example.school.screens.chat.models.ChatEvent
 import com.example.school.screens.chat.models.ChatViewState
-import com.example.school.screens.chat.models.MessageModel
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.ChildEventListener
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ktx.database
+import com.google.firebase.database.ktx.getValue
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
@@ -23,9 +29,9 @@ import java.time.LocalDate
 import java.time.format.TextStyle
 import java.util.*
 
-class ChatViewModel(
-    private var repository: Repository = Repository(FirebaseRealtimeDatabaseServiceImpl())
-) : ViewModel(), EventHandler<ChatEvent> {
+class ChatViewModel() : ViewModel(), EventHandler<ChatEvent> {
+
+    private val db = Firebase.firestore
 
     // Screen state
     private val _uiState = MutableStateFlow(ChatViewState())
@@ -35,6 +41,8 @@ class ChatViewModel(
     private var _messagesItemsSenders = mutableListOf<String>()
     private var _messagesDates = mutableListOf<String>()
     private var _messagesPaddingMineAfterLastOther = mutableListOf<Boolean>()
+
+    private var i = 0
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun obtainEvent(event: ChatEvent) {
@@ -55,60 +63,65 @@ class ChatViewModel(
             TextStyle.FULL, Locale.getDefault()
         )
 
-        val message = MessageModel(
-            name = Firebase.auth.currentUser?.displayName.toString(),
-            text = text,
-            time = time.format(calendar.time),
-            isMine = false,
-            sender = Firebase.auth.currentUser?.uid.toString(),
-            date = currentDate.dayOfMonth.toString() + " " + currentMonthName,
-            isNewDate = false
+        db.collection("messages").document().set(
+            hashMapOf(
+                "name" to Firebase.auth.currentUser?.displayName.toString(),
+                "text" to text,
+                "time" to time.format(calendar.time),
+                "isMine" to false,
+                "sender" to Firebase.auth.currentUser?.uid.toString(),
+                "date" to currentDate.dayOfMonth.toString() + " " + currentMonthName,
+                "isNewDate" to false,
+                "isMoreOne" to false,
+                "isPaddingMine" to false,
+                "millis" to System.currentTimeMillis()
+            )
         )
-
-        viewModelScope.launch {
-            repository.addMessage(message)
-
-            _uiState.emit(_uiState.value.copy(counter = ++_uiState.value.counter))
-        }
     }
 
     private fun getMessages() {
-        _uiState.update { currentState ->
-            currentState.copy(
-                isLoading = true
-            )
-        }
+        db.collection("messages")
+            .orderBy("millis")
+            .addSnapshotListener { value, e ->
+                val messages = emptyList<Map<String, Any>>().toMutableList()
 
-        viewModelScope.launch {
-            var i = 0
-            repository.getMessages()
-                .map { messages ->
-                    _messagesItemsSenders.add(messages.get(0).sender)
-                    _messagesDates.add(messages.get(0).date)
-                    _messagesPaddingMineAfterLastOther.add(messages.get(0).isMine)
+                if (value != null) {
+                    for (doc in value) {
+                        val data = doc.data
 
-                    // Check for new sender
-                    if ((_messagesItemsSenders.size > 1) && (!messages.get(0).isMine) and
+                        _messagesItemsSenders.add(data["sender"].toString())
+                        _messagesDates.add(data["date"].toString())
+                        _messagesPaddingMineAfterLastOther.add(data["isMine"] as Boolean)
+
+                        data["isMine"] =
+                            Firebase.auth.currentUser?.uid.toString() == data["sender"]
+
+                        // Check for new sender
+                        if ((_messagesItemsSenders.size > 1) && (!(data["isMine"] as Boolean)) and
                             (_messagesItemsSenders[i] == _messagesItemsSenders[i-1])) {
-                        messages.get(0).isMoreOne = true
+                            data["isMoreOne"] = true
+                        }
+
+                        // Check for new date
+                        data["isNewDate"] =
+                            ((_messagesDates.size > 1) && _messagesDates[i] != _messagesDates[i-1])
+
+                        // Set padding for first message that called "isMine"
+                        data["isPaddingMine"] =
+                            (_messagesPaddingMineAfterLastOther.size > 1) &&
+                                    (data["isMine"] == true) and
+                                    (_messagesPaddingMineAfterLastOther[i] !=
+                                            _messagesPaddingMineAfterLastOther[i-1])
+
+                        i += 1
+                        messages.add(data)
                     }
-
-                    // Check for new date
-                    messages.get(0).isNewDate =
-                        ((_messagesDates.size > 1) && _messagesDates[i] != _messagesDates[i-1])
-
-                    // Set padding for first message that called "isMine"
-                    messages.get(0).isPaddingMine = (_messagesPaddingMineAfterLastOther.size > 1) &&
-                            (messages.get(0).isMine) and
-                            (_messagesPaddingMineAfterLastOther[i]
-                                    != _messagesPaddingMineAfterLastOther[i-1])
-
-                    i += 1
-                    ChatViewState(messages = messages, isLoading = false)
                 }
-                .collect() { newState ->
-                    _uiState.emit(newState)
-                }
-        }
+                updateMessages(messages)
+            }
+    }
+
+    private fun updateMessages(messages: MutableList<Map<String, Any>>) {
+        _uiState.value = ChatViewState(messages = messages.asReversed(), isLoading = false)
     }
 }
