@@ -3,6 +3,7 @@ package com.example.school.screens
 import android.annotation.SuppressLint
 import android.util.Log
 import android.view.WindowInsets
+import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.DragInteraction
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -31,12 +32,16 @@ import com.example.school.screens.chat.ChatViewModel
 import com.example.school.screens.chat.models.MessageModel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import com.example.school.screens.chat.models.ChatViewState
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun ChatScreen(
     modifier: Modifier = Modifier,
     chatViewModel: ChatViewModel,
-    onClickSendMessage: (String) -> Unit
+    onClickSendMessage: (String) -> Unit,
 ) {
     val viewState by chatViewModel.uiState.collectAsState()
 

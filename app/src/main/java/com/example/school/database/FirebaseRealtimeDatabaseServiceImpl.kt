@@ -52,7 +52,9 @@ class FirebaseRealtimeDatabaseServiceImpl : FirebaseRealtimeDatabaseService {
 
                 override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
 
-                override fun onCancelled(error: DatabaseError) {}
+                override fun onCancelled(error: DatabaseError) {
+                    close(error.toException())
+                }
             }
 
             messagesRef.addChildEventListener(messagesListener)
@@ -64,6 +66,4 @@ class FirebaseRealtimeDatabaseServiceImpl : FirebaseRealtimeDatabaseService {
     override fun sendMessage(message: MessageModel) {
         messagesRef.push().setValue(message)
     }
-
-
 }

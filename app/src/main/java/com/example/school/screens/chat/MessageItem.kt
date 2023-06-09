@@ -26,95 +26,130 @@ import com.example.school.screens.chat.models.MessageModel
 fun MessageItem(
     messageItem: MessageModel,
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth(),
-        horizontalArrangement =
-            if (messageItem.isMine) Arrangement.End else Arrangement.Start
-    ) {
-
-        if (messageItem.isMine) {
-            Card(
+    Column {
+        // Show the date of group messages
+        if (messageItem.isNewDate) {
+            Row(
                 modifier = Modifier
-                    .padding(bottom = 15.dp)
-                    .align(Alignment.Bottom),
-                shape = RoundedCornerShape(6.dp),
-                backgroundColor =  Color(0xFF3C3F41),
-                contentColor = Color.White
+                    .fillMaxWidth()
+                    .padding(top = 15.dp, bottom = 15.dp),
+                horizontalArrangement = Arrangement.Center
             ) {
-                Text(
-                    modifier = Modifier
-                        .alpha(.9f)
-                        .padding(top = 2.dp, bottom = 2.dp, start = 5.dp, end = 5.dp),
-                    text = messageItem.time,
-                    fontSize = 10.sp
-                )
-            }
-        }
-
-        Card(
-            modifier = Modifier
-                .widthIn(max = 350.dp)
-                .padding(
-                    start = if (messageItem.isMine) 5.dp else 10.dp,
-                    end = if (messageItem.isMine) 10.dp else 5.dp,
-                    bottom = 4.dp,
-                    top = if (messageItem.isMine) 1.dp else if (messageItem.isMoreOne) .5.dp else 15.dp
-                ),
-            shape = RoundedCornerShape(15.dp),
-            backgroundColor =
-                if (messageItem.isMine) Color(0xFF4A109C) else Color(0xFF292829),
-            contentColor = Color.White
-        ) {
-            Column(
-                modifier = Modifier
-                    .padding(
-                        start = 12.dp,
-                        top = 6.dp,
-                        bottom = 6.dp,
-                        end = 12.dp
-                    )
-            ) {
-
-                if (!messageItem.isMine xor messageItem.isMoreOne) {
+                Card(
+                    shape = RoundedCornerShape(5.dp),
+                    backgroundColor = Color(0xFF3C3F41),
+                ) {
                     Text(
-                        modifier = Modifier,
-                        text = messageItem.name,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 15.sp,
-                        color = Color.White
+                        text = messageItem.date,
+                        modifier = Modifier
+                            .padding(top = 3.dp, bottom = 3.dp, start = 6.dp, end = 6.dp),
+
+                        color = Color.White,
+                        fontSize = 13.sp,
                     )
                 }
 
-                Text(
-                    text = messageItem.text,
-                    fontSize = 16.sp
-                )
-
             }
-
         }
 
-        if (!messageItem.isMine) {
+        // Area of message
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement =
+            if (messageItem.isMine) Arrangement.End else Arrangement.Start
+        ) {
+
+            // Time card of message (if mine)
+            if (messageItem.isMine) {
+                Card(
+                    modifier = Modifier
+                        .padding(bottom = 15.dp)
+                        .align(Alignment.Bottom),
+                    shape = RoundedCornerShape(6.dp),
+                    backgroundColor = Color(0xFF3C3F41),
+                    contentColor = Color.White
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .alpha(.9f)
+                            .padding(top = 2.dp, bottom = 2.dp, start = 5.dp, end = 5.dp),
+                        text = messageItem.time,
+                        fontSize = 10.sp
+                    )
+                }
+            }
+
+            // Message Card
             Card(
                 modifier = Modifier
-                    .padding(bottom = 15.dp)
-                    .align(Alignment.Bottom),
-                shape = RoundedCornerShape(6.dp),
-                backgroundColor =  Color(0xFF3C3F41),
+                    .widthIn(max = 350.dp)
+                    .padding(
+                        start = if (messageItem.isMine) 5.dp else 10.dp,
+                        end = if (messageItem.isMine) 10.dp else 5.dp,
+                        bottom = 4.dp,
+                        top =
+                        if (messageItem.isMine xor messageItem.isPaddingMine) 1.dp
+                        else if (messageItem.isPaddingMine) 15.dp
+                        else if (messageItem.isMoreOne) .5.dp
+                        else 15.dp
+                    ),
+                shape = RoundedCornerShape(15.dp),
+                backgroundColor =
+                if (messageItem.isMine) Color(0xFF4A109C) else Color(0xFF292829),
                 contentColor = Color.White
             ) {
-                Text(
+                Column(
                     modifier = Modifier
-                        .alpha(.9f)
-                        .padding(top = 2.dp, bottom = 2.dp, start = 5.dp, end = 5.dp),
-                    text = messageItem.time,
-                    fontSize = 9.sp
-                )
+                        .padding(
+                            start = 12.dp,
+                            top = 6.dp,
+                            bottom = 6.dp,
+                            end = 12.dp
+                        )
+                ) {
+
+                    if (!messageItem.isMine xor messageItem.isMoreOne) {
+                        Text(
+                            modifier = Modifier,
+                            text = messageItem.name,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 15.sp,
+                            color = Color.White
+                        )
+                    }
+
+                    Text(
+                        text = messageItem.text,
+                        fontSize = 16.sp
+                    )
+
+                }
+
             }
+
+            // Time card of message (if not mine)
+            if (!messageItem.isMine) {
+                Card(
+                    modifier = Modifier
+                        .padding(bottom = 15.dp)
+                        .align(Alignment.Bottom),
+                    shape = RoundedCornerShape(6.dp),
+                    backgroundColor =  Color(0xFF3C3F41),
+                    contentColor = Color.White
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .alpha(.9f)
+                            .padding(top = 2.dp, bottom = 2.dp, start = 5.dp, end = 5.dp),
+                        text = messageItem.time,
+                        fontSize = 9.sp
+                    )
+                }
+            }
+
+
         }
-
-
     }
 }
 
